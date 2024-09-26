@@ -1,39 +1,41 @@
 document.getElementById('loginForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const errorMessage = document.getElementById('error-message');
-  const loadingMessage = document.getElementById('loading-message');
+    event.preventDefault();
   
-  errorMessage.style.display = 'none';
-  loadingMessage.style.display = 'block'; // Exibe a mensagem de carregamento
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorMessage = document.getElementById('error-message');
+    
+    // Exibe mensagem de carregamento (opcional, pode ser uma melhoria)
+    errorMessage.style.display = 'none';
   
-  fetch('https://reqres.in/api/login', {
+    // Faz a requisição POST à API do Reqres para autenticação
+    fetch('https://reqres.in/api/login', {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-          email: email,
-          password: password
+        email: email,
+        password: password
       })
-  })
-  .then(response => response.json())
-  .then(data => {
-      loadingMessage.style.display = 'none'; // Esconde a mensagem de carregamento
+    })
+    .then(response => response.json())
+    .then(data => {
       if (data.token) {
-          localStorage.setItem('userEmail', email);
-          window.location.href = 'home.html';
+        // Login bem-sucedido, redireciona para a home
+        localStorage.setItem('userEmail', email);
+        window.location.href = 'home.html'; // Altere "home.html" para a página correta
       } else {
-          errorMessage.textContent = 'Login ou senha incorretos. Tente novamente.';
-          errorMessage.style.display = 'block';
+        // Exibe mensagem de erro
+        errorMessage.textContent = 'Login ou senha incorretos. Tente novamente.';
+        errorMessage.style.display = 'block';
       }
-  })
-  .catch(error => {
-      loadingMessage.style.display = 'none'; // Esconde a mensagem de carregamento
+    })
+    .catch(error => {
+      // Exibe mensagem de erro em caso de falha na requisição
       errorMessage.textContent = 'Erro na conexão. Tente novamente mais tarde.';
       errorMessage.style.display = 'block';
       console.error('Erro:', error);
+    });
   });
-});
+  
